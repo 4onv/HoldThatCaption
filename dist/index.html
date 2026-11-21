@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#1d201d">
+  <title>HoldThatCaption — Timing studio</title>
+  <meta name="description" content="Keep a punchline out of the subtitles until it is spoken. Try a nine-second comedy clip, compare both cuts, and export the captions.">
+  <link rel="icon" href="data:,">
+  <link rel="preload" href="assets/fonts/Basteleur-Moonlight.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="studio.css">
+  <script type="module" src="studio.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="brand" aria-label="HoldThatCaption">Hold<em>That</em>Caption</div>
+    <nav aria-label="Clip actions">
+      <button id="guide">Quick guide</button>
+      <button id="open-import">Import clip</button>
+      <button id="export">Export SRT</button>
+    </nav>
+  </header>
+  <main>
+    <section class="screening" aria-label="Clip preview">
+      <div class="stage demo-stage">
+        <video id="video" playsinline preload="auto" poster="assets/poster.jpg" src="assets/demo.mp4" aria-label="Clip preview"></video>
+        <div class="clip-title"><small id="filetype">Demo clip</small><h1 id="filename">Coffee break</h1></div>
+        <button id="watch-demo" type="button">Play the 9-second demo</button>
+        <div id="subtitle"></div>
+      </div>
+      <div class="transport">
+        <button class="icon" id="play" aria-label="Play"><img src="assets/icons/play-fill.svg" alt=""></button>
+        <span class="clock"><b id="current">0:00.00</b> / <span id="length">0:09.00</span></span>
+        <input id="seek" type="range" min="0" max="9" step=".001" value="0" aria-label="Seek video">
+        <button class="icon" id="mute" aria-label="Mute"><img src="assets/icons/speaker-high.svg" alt=""></button>
+        <div class="switch" role="group" aria-label="Preview version"><button id="original" aria-pressed="true">Original</button><button id="edited" aria-pressed="false">Edited</button></div>
+      </div>
+    </section>
+
+    <section class="editing-desk" aria-label="Caption editor">
+      <div class="script-line">
+        <div class="script-label"><span id="cue-index">Cue 03</span><span>Choose the reveal word</span></div>
+        <div id="words" aria-label="Reveal word"></div>
+      </div>
+      <div class="edit-controls">
+        <div class="timing">
+          <label for="reveal">Spoken reveal</label>
+          <input id="reveal" value="0:07.100" placeholder="0:00.000" inputmode="decimal" aria-describedby="diagnostic-detail">
+          <div class="nudges" role="group" aria-label="Fine timing">
+            <button id="earlier" aria-label="Move reveal 100 milliseconds earlier">−0.1s</button>
+            <button id="later" aria-label="Move reveal 100 milliseconds later">+0.1s</button>
+          </div>
+          <button id="mark">Use playhead</button>
+        </div>
+        <div class="diagnosis"><div><strong id="diagnosis"></strong><small id="diagnostic-detail"></small></div></div>
+        <div class="edit-actions"><button id="apply" class="primary">Apply timing fix</button><button id="audition">Replay caption</button></div>
+      </div>
+      <div class="timeline" aria-label="Caption timeline">
+        <div id="ruler"></div><div id="track" aria-label="Caption segments"></div>
+        <div class="reveal-rail"><button id="jump-reveal" title="Pause on the marked reveal"></button></div>
+      </div>
+      <section class="screen-test" aria-labelledby="review-title">
+        <div><h2 id="review-title">Screen test</h2><p id="review-hint">Apply a fix to compare both cuts, or hand the original to a fresh viewer.</p></div>
+        <div class="review-actions"><button id="compare-cuts">Compare cuts</button><button id="viewer-test">Test with a viewer</button></div>
+      </section>
+      <details id="observations" hidden>
+        <summary>Viewer notes <small id="note-count"></small></summary>
+        <ol id="note-list"></ol>
+        <button id="save-notes">Download viewer notes</button>
+      </details>
+      <details><summary>Transcript <small id="cue-count"></small></summary><div id="cues"></div></details>
+      <p id="status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <dialog id="review-dialog" aria-labelledby="review-heading">
+    <div class="dialog-title"><h2 id="review-heading"></h2><button id="close-review" aria-label="Close screening">×</button></div>
+    <p id="review-instruction"></p>
+    <div class="review-frame" hidden>
+      <video id="review-video" playsinline preload="metadata" aria-label="Screening playback"></video>
+      <span id="review-caption"></span>
+    </div>
+    <form id="guess-form" hidden>
+      <label for="guess">What word or phrase did you expect?</label>
+      <input id="guess" maxlength="160" autocomplete="off" required>
+      <button class="primary">Save response</button>
+    </form>
+    <p id="review-result" aria-live="polite"></p>
+    <button id="review-action" class="primary"></button>
+  </dialog>
+<dialog id="import-dialog"><form id="import-form"><div class="dialog-title"><h2>Import a clip</h2><button type="button" class="close" aria-label="Close">×</button></div><p>Choose a video and its captions. Both files stay in this browser.</p><label>Video<input required id="video-file" type="file" accept="video/*"></label><label>Captions (.srt or .vtt)<input required id="caption-file" type="file" accept=".srt,.vtt"></label><p id="import-error" role="alert"></p><button class="primary">Open in studio</button></form></dialog>
+<dialog id="guide-dialog"><div class="dialog-title"><h2>Quick guide</h2><button class="close" aria-label="Close">×</button></div><ol><li>Play the original and listen for the reveal. Choose its caption in the timeline.</li><li>Select the first word to hold back. Pause on the spoken reveal and choose <b>Use playhead</b>, or enter the time.</li><li>Apply the fix, then replay the caption in Original and Edited to compare. Check that the delayed words stay readable.</li><li>Export SRT to bring the edited captions into your video editor.</li></ol><button id="load-demo">Open the coffee demo</button></dialog>
+</body></html>
+
