@@ -107,6 +107,11 @@ dialog::backdrop { background:#0d0f0ce3 }
 .screen-test p { margin-top:4px; color:var(--muted); font-size:.92rem }
 .review-actions { display:flex; flex-wrap:wrap; gap:10px }
 .review-actions button { border:1px solid var(--rule); padding:8px 12px }
+.rehearsal { display:flex; align-items:center; gap:10px 16px; flex-wrap:wrap; padding:15px 0; border-top:1px solid var(--rule) }
+.rehearsal select { color:var(--cream); background:var(--ink); border:1px solid var(--rule); padding:7px; font:inherit }
+.rehearsal div { display:flex; gap:14px }
+.rehearsal button { text-decoration:underline; text-underline-offset:4px }
+.rehearsal small { color:var(--muted); flex-basis:100% }
 #note-list { padding-left:24px; overflow-wrap:anywhere }
 #note-list li { margin:9px 0 }
 #review-dialog { width:min(760px,95vw); max-height:94svh; overflow:auto }

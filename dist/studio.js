@@ -1,5 +1,6 @@
 import { parseTime, readCaptions, serializeSrt, splitCue, timeLabel, wordPositions } from './captions.mjs';
 import { setupScreenTest } from './screen-test.js';
+import { readCheckpoint, trackKey } from './checkpoint.mjs';
 
 const $ = id => document.getElementById(id);
 const video = $('video');
@@ -19,6 +20,47 @@ let sourceUrl;
 let replayEnd = null;
 let animation;
 let playhead;
+const checkpointSlot = 'holdthatcaption.checkpoint.v1';
+
+function currentTrackKey() {
+  return trackKey($('filename').textContent, duration, cues);
+}
+
+function checkForSavedCut() {
+  try {
+    const saved = readCheckpoint(localStorage.getItem(checkpointSlot), currentTrackKey(), cues);
+    $('restore-cut').disabled = !saved;
+    $('checkpoint-note').textContent = saved ? 'A saved checkpoint is ready for this clip.' :
+      'Save one checkpoint in this browser. Saving another replaces it.';
+  } catch {
+    $('restore-cut').disabled = true;
+    $('checkpoint-note').textContent = 'No readable checkpoint is available for this clip.';
+  }
+}
+
+$('save-cut').onclick = () => {
+  try {
+    localStorage.setItem(checkpointSlot, JSON.stringify({
+      version: 1, key: currentTrackKey(), selected, edits: [...edits]
+    }));
+    checkForSavedCut();
+    announce('Applied edits saved. Reopen the same clip and captions to restore them.');
+  } catch { announce('Browser storage is unavailable. Export SRT to keep your edits.'); }
+};
+
+$('restore-cut').onclick = () => {
+  try {
+    const saved = readCheckpoint(localStorage.getItem(checkpointSlot), currentTrackKey(), cues);
+    if (!saved) { checkForSavedCut(); return; }
+    edits = saved.edits;
+    setMode('edited');
+    selectCue(saved.selected);
+    announce('Restored the saved caption timing.');
+  } catch { checkForSavedCut(); }
+};
+
+$('pace').onchange = () => { video.playbackRate = Number($('pace').value); };
+video.addEventListener('loadedmetadata', () => { video.playbackRate = Number($('pace').value); });
 
 const clearObservations = setupScreenTest(() => ({
   src: video.currentSrc || video.src,
@@ -289,6 +331,7 @@ function loadProject(src, name, newCues, length, demoProject = false) {
   $('filetype').textContent = demoProject ? 'Demo clip' : 'Local clip';
   setMode('original');
   selectCue(demoProject ? 2 : 0, false);
+  checkForSavedCut();
 }
 
 function inspectVideo(url) {
@@ -349,4 +392,5 @@ $('import-form').onsubmit = async event => {
 };
 
 selectCue(2, false);
+checkForSavedCut();
 

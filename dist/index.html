@@ -69,6 +69,12 @@
         <button id="save-notes">Download viewer notes</button>
       </details>
       <details><summary>Transcript <small id="cue-count"></small></summary><div id="cues"></div></details>
+      <section class="rehearsal" aria-label="Rehearsal tools">
+        <label for="pace">Rehearsal speed</label>
+        <select id="pace"><option value="0.5">Half speed</option><option value="0.75">¾ speed</option><option value="1" selected>Normal speed</option></select>
+        <div><button id="save-cut">Save checkpoint</button><button id="restore-cut" disabled>Restore checkpoint</button></div>
+        <small id="checkpoint-note">Keep one snapshot of your applied edits in this browser.</small>
+      </section>
       <p id="status" role="status" aria-live="polite"></p>
     </section>
   </main>

@@ -18,6 +18,8 @@ Open http://127.0.0.1:4387/. The app uses native browser modules and requires no
 
 Import a browser-playable video and plain-text SRT or WebVTT captions with non-overlapping cues. Choose the first word to hold, pause at the reveal, and choose **Use playhead**. **Apply timing fix** plays the revision. Switch between Original and Edited, or remove the fix to restore that cue. Export SRT before closing the tab. The browser keeps media and edits in memory. Export includes all applied edits regardless of the preview mode.
 
+Use **Rehearsal speed** for a slower pass through a tricky line. The viewer test and comparison always run at normal speed. **Save checkpoint** keeps one snapshot of the applied timing edits in this browser. After a reload, reimport the same clip and original caption track and choose **Restore checkpoint**. The coffee demo can be restored immediately. Saving a new checkpoint replaces the previous one. Media and viewer notes are excluded.
+
 The editor supports one reveal per source cue. It exports caption text and timing. WebVTT positioning and style markup are not retained. The creator chooses the spoken reveal.
 
 ## Source
